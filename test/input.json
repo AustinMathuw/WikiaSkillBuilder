@@ -1,0 +1,39 @@
+{
+  "session": {
+    "sessionId": "SessionId.3a9e9285-3d7f-4bd2-a724-a9f5da244c2c",
+    "application": {
+      "applicationId": "amzn1.ask.skill.46b0d480-d1b8-4a92-aa7e-96402bc35ff8"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AEKTREVVJOP5IO4DZXMKCFWWS4DECGRQQJRL6CRUOVDNZL7ERS4RVBMI2NB4JU4AGHWQVFOZGJWL4SCY5W522AUYUL55LPDW67TGZ65XMGWVZJD4SYV34TJBCTEDWPTMVUSRENRZKUFUT4YZP2C7KU2OAINFYQJYU2COENX6MASABQGJ2RHPOVSIGN7M22V6NVSX4TLY7645YFY"
+    },
+    "new": true
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.48bd56f2-de0c-473f-aded-da596e057b6e",
+    "locale": "en-US",
+    "timestamp": "2017-06-26T22:27:17Z",
+    "intent": {
+      "name": "GetInfoIntent",
+      "slots": {
+        "ArticleWithSubpage": {
+          "name": "ArticleWithSubpage"
+        },
+        "Article": {
+          "name": "Article"
+        },
+        "Subpage": {
+          "name": "Subpage",
+          "value": "earth"
+        },
+        "Section": {
+          "name": "Section",
+          "value": "formation"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

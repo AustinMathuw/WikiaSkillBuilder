@@ -1,0 +1,27 @@
+Search (|for) (|anything) (|on) (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+What do you have on (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+What can you tell me on (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+(Find|Give|Tell) me everything you have on (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+(What|Who) is (the|a|an) (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+What are (the|a|an) (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+Find (|me) (the|a|an) (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+Tell me about (|the) {Section} (in|of) (|the) {Subpage} (in|from) (|the) {ArticleWithSubpage} (|system)
+Search (|for) (|anything) (reguarding|on|about) (|the) {Article}
+What do you have on (|the) {Article}
+What can you tell me on (|the) {Article}
+(Find|Give|Tell) me everything you have on (|the) {Article}
+(What|Who) is (the|a|an) (|the) {Article}
+What's (the|a|an) (|the) {Article}
+What are (the|a|an) (|the) {Article}
+Find (|me) (the|a|an) (|the) {Article}
+Tell me about (the|a|an) (|the) {Article}
+Explain (the|a|an) (|the) {Article}
+Search (|for) (|anything) on (|the) {Section} (for|in) (|the) {Article}
+What do you have on (|the) {Section} (for|in) (|the) {Article}
+What can you tell me on (|the) {Section} (for|in) (|the) {Article}
+(Find|Give|Tell) me everything you have on (|the) {Section} (for|in) (|the) {Article}
+(What|Who) is (the|a|an) (|the) {Section} (for|in) (|the) {Article}
+(What|Who) are (the|a|an) (|the) {Section} (for|in) (|the) {Article}
+Find (|me) (the|a|an) (|the) {Section} (for|in) (|the) {Article}
+Tell me about (|the) {Section} (for|in) (|the) {Article}
+Where are some {Section} (for|in) (|the) {Article}
