@@ -144,29 +144,77 @@ var handlers = {
                 console.log("test1");
                 var article;
                 var contextThis = this;
-                var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
-                articleWithoutStartSection(article,contextThis,id);
+                try{
+                    var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
+                    articleWithoutStartSection(article,contextThis,id);
+                } catch (e) {
+                    console.log(e);
+                    var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
+                    var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
+                    speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
+                    speechOutput += repromptSpeech;
+                    this.attributes['speechOutput'] = speechOutput;
+                    this.attributes['repromptSpeech'] = repromptSpeech;
+                    this.emit(':ask', speechOutput, repromptSpeech);
+                }
+                
             //Main Artice, subpage, and section
             } else if(articleWithSubpageDefined && subpageDefined && sectionDefined && !articleDefined && typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName] != 'undefined' && articlesWithSubpage[articleWithSubpageName].subpages[subpageName].sections.indexOf(sectionName) > -1) {
                 console.log("test8");
                 var article;
                 var contextThis = this;
-                var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
-                articleWithStartSection(article,contextThis,id,sectionName);
+                try{
+                    var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
+                    articleWithStartSection(article,contextThis,id,sectionName);
+                } catch (e) {
+                    console.log(e);
+                    var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
+                    var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
+                    speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
+                    speechOutput += repromptSpeech;
+                    this.attributes['speechOutput'] = speechOutput;
+                    this.attributes['repromptSpeech'] = repromptSpeech;
+                    this.emit(':ask', speechOutput, repromptSpeech);
+                }
+                
             //Main article and section
             } else if(!articleWithSubpageDefined && !subpageDefined && sectionDefined && articleDefined && typeof articles[articleName] != 'undefined' && articles[articleName].sections.indexOf(sectionName) > -1) {
                 console.log("test9");
                 var article;
                 var contextThis = this;
-                var id = articles[articleName].id;
-                articleWithStartSection(article,contextThis,id,sectionName);
+                try{
+                    var id = articles[articleName].id;
+                    articleWithStartSection(article,contextThis,id,sectionName);
+                } catch (e) {
+                    console.log(e);
+                    var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
+                    var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
+                    speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
+                    speechOutput += repromptSpeech;
+                    this.attributes['speechOutput'] = speechOutput;
+                    this.attributes['repromptSpeech'] = repromptSpeech;
+                    this.emit(':ask', speechOutput, repromptSpeech);
+                }
+                
             //Main article only
             } else if(!articleWithSubpageDefined && !subpageDefined && !sectionDefined && articleDefined && typeof articles[articleName] != 'undefined') {
                 console.log("test10");
                 var article;
                 var contextThis = this;
-                var id = articles[articleName].id;
-                articleWithoutStartSection(article,contextThis,id);
+                try{
+                    var id = articles[articleName].id;
+                    articleWithoutStartSection(article,contextThis,id);
+                } catch (e) {
+                    console.log(e);
+                    var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
+                    var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
+                    speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
+                    speechOutput += repromptSpeech;
+                    this.attributes['speechOutput'] = speechOutput;
+                    this.attributes['repromptSpeech'] = repromptSpeech;
+                    this.emit(':ask', speechOutput, repromptSpeech);
+                }
+                
             } else {
                 var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                 var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
