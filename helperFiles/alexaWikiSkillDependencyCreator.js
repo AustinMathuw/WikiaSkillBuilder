@@ -10,6 +10,8 @@ const https = require('https');
 var Wikia = require('node-wikia');
 var ProgressBar = require('progress');
 var fs = require('fs');
+var AWS = require('aws-sdk');
+var s3 = new AWS.S3();
 var Spinner = require('cli-spinner').Spinner;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -350,7 +352,7 @@ function articleRenamer() {
                     contentSectionNames.push(contentSections[sectionNum].title.toLowerCase().replace(/[^0-9a-z'&]/gi," ").replace(/ '/gi,"").replace(/' /gi,"").replace(/&/gi,"").replace(/amp/gi,"and").replace(/\s+/g,' ').trim());
                     if(typeof contentSections[sectionNum].images[0] != "undefined") {
                         var urlRaw = contentSections[sectionNum].images[0].src;
-                        imageSrc = contentSections[sectionNum].images[0].src.replace("vignette1","rsz.io/vignette1");
+                        var imageSrc = contentSections[sectionNum].images[0].src.replace("vignette1","rsz.io/vignette1");
                         var compareString = "";
                         if(imageSrc.indexOf(".png") > -1){
                             compareString = ".png";
