@@ -237,7 +237,6 @@ the return v2 4
 vehicles
 ground vehicles
 spacecraft
-elite dangerous premonition
 general faq
 what is elite dangerous
 what are the main features of elite dangerous
@@ -1675,8 +1674,12 @@ planet moon
 other authors
 settlement and war with earth
 the assassination of governor santorini
+unknown device
+how to find surface sites
 first contact and conflict
 renewed activity
+identification and escalation
+thargoid surface site
 the return
 politics
 about

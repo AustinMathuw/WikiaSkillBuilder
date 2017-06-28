@@ -140,8 +140,8 @@ var handlers = {
             var articlesWithSubpage = this.t("ARTICLES_WITH_SUBPAGES");
 
 
-            //Main Artice and Subpage
-            if(articleWithSubpageDefined && subpageDefined && typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id != 'undefined' && !articleDefined && !sectionDefined) {
+            //Main Artice and Subpage FIX FROM LOGS
+            if(articleWithSubpageDefined && subpageDefined && !sectionDefined && !articleDefined && typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id != 'undefined' && !articleDefined && !sectionDefined) {
                 console.log("test1");
                 var article;
                 var contextThis = this;

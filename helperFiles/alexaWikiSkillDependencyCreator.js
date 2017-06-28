@@ -27,7 +27,7 @@ var allArticleTitles = [];
 var allArticleIds = [];
 var removedArticles = {};
 var redirectArticles = [];
-var imageUrlArray = [];
+var imageUrlArray = {};
 var allIds = [];
 var duplicateArticleTitles = {};
 var duplicateArticleTitlesFix = {};
@@ -38,6 +38,8 @@ var articlesWithSubpages = "";
 var allArticlesRawTxt = "";
 var subpagesRawTxt = "";
 var sectionsRawTxt = "";
+
+var bucket = "austinmatthuw";
  
 //Program start
 var spinner = new Spinner('Fetching all wiki pages... This may take a while... %s');
@@ -350,10 +352,13 @@ function articleRenamer() {
                         sectionsRawTxt += contentSections[sectionNum].title.toLowerCase().replace(/[^0-9a-z'&]/gi," ").replace(/ '/gi,"").replace(/' /gi,"").replace(/&/gi,"").replace(/amp/gi,"and").replace(/\s+/g,' ').trim() + "\n";
                     }
                     contentSectionNames.push(contentSections[sectionNum].title.toLowerCase().replace(/[^0-9a-z'&]/gi," ").replace(/ '/gi,"").replace(/' /gi,"").replace(/&/gi,"").replace(/amp/gi,"and").replace(/\s+/g,' ').trim());
-                    if(typeof contentSections[sectionNum].images[0] != "undefined") {
-                        var urlRaw = contentSections[sectionNum].images[0].src;
-                        var imageSrc = contentSections[sectionNum].images[0].src.replace("vignette1","rsz.io/vignette1");
-                        var compareString = "";
+                }
+                if(typeof contentSections[sectionNum].images[0] != "undefined") {
+                    var urlRaw = contentSections[sectionNum].images[0].src;
+                    var imageSrc = contentSections[sectionNum].images[0].src;
+                    var compareString = "";
+
+                    if(imageSrc.indexOf("images") > -1){
                         if(imageSrc.indexOf(".png") > -1){
                             compareString = ".png";
                         } else if(imageSrc.indexOf(".jpg") > -1){
@@ -361,34 +366,50 @@ function articleRenamer() {
                         } else if(imageSrc.indexOf(".jpeg") > -1){
                             compareString = ".jpeg";
                         } 
-                        if(compareString != ""){
-                            var url = imageSrc.substring(0, imageSrc.indexOf(compareString)+compareString.length);
-                            console.log(url);
-                            https.get(url, function(res) {
-                                var body = '';
-                                res.on('data', function(chunk) {
-                                // Agregates chunks
-                                    body += chunk;
-                                });
-                                var s3url = imageSrc.substring(imageSrc.indexOf("images"),imageSrc.indexOf(compareString)+compareString.length);
-                                res.on('end', function() {
-                                    // Once you received all chunks, send to S3
-                                    var params = {
-                                        Bucket: 'austinmatthuw',
-                                        Key: s3url,
-                                        Body: body
-                                    };
-                                    s3.putObject(params, function(err, data) {
-                                        if (err) {
-                                            console.error(err, err.stack);
-                                        } else {
-                                            console.log(data);
-                                            imageUrlArray.push(urlRaw);
+                    }
+                    if(compareString != ""){
+                        var s3url = imageSrc.substring(imageSrc.indexOf("images"),imageSrc.indexOf(compareString)+compareString.length);
+                        var paramsGet = {
+                            Bucket: bucket,
+                            Key: s3url
+                        };
+                        var done = await(s3.headObject(paramsGet, function(errGet, data){
+                            if (errGet && errGet.code === 'NotFound') {
+                                https.get(urlRaw, function(res) {
+                                    var data = [];
+                                    res.on('data', function(chunk) {
+                                    // Agregates chunks
+                                        data.push(chunk);
+                                    });
+                                    res.on('end', function() {
+                                        var buffer = Buffer.concat(data);
+                                        console.log(buffer);
+                                        var base64data = new Buffer(buffer, 'binary');
+                                        var paramsPut = {
+                                            Bucket: bucket,
+                                            Key: s3url,
+                                            Body: base64data,
+                                            ACL: 'public-read'
                                         }
+
+                                        s3.putObject(paramsPut,function(errPut, data) {
+                                            if (errPut) {
+                                                //console.error(errPut, errPut.stack);
+                                            } else {
+                                                //console.log(data);
+                                                imageUrlArray[urlRaw] = "https://s3.amazonaws.com/"+bucket+"/" + s3url;
+                                            }
+                                        });
                                     });
                                 });
-                            });
-                        }
+                            } else {
+                                imageUrlArray[urlRaw] = "https://s3.amazonaws.com/"+bucket+"/" + s3url;
+                                console.log(s3url);
+                                return true;
+                            }
+                        }));
+                        console.log(done);
+                        console.log(imageUrlArray);
                     }
                 }
             }
@@ -492,7 +513,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -502,7 +523,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -512,7 +533,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -522,7 +543,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -532,7 +553,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -542,7 +563,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });
@@ -552,7 +573,7 @@ function mergeMasterWithSubpages() {
             throw err;
         }
         fileCreated++;
-        if(fileCreated < 6) {
+        if(fileCreated < 7) {
             done();
         }
     });

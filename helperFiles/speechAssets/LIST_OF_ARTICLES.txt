@@ -751,6 +751,7 @@ sanuma decorative meat
 sap 8 core container
 saud kruger
 scarab
+scavenger
 scrap
 secret data delivery
 sedna
@@ -845,6 +846,7 @@ technical blueprints
 tellurium
 terra mater blood bores
 thallium
+thargoid surface site
 thargoids
 the abyss
 the bubble
@@ -889,6 +891,7 @@ unexpected emission data
 unidentified signal source
 universal cartographics
 unknown artefact
+unknown link
 unknown probe
 unknown ship
 unusual encrypted files
