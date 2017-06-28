@@ -5,13 +5,12 @@ var Wikia = require('node-wikia');
 var wiki = new Wikia("elite-dangerous"); //Define wikia site (subdomain)
 var APP_ID = undefined; // TODO replace with your app ID (OPTIONAL).
 var articleIds = require('./articleIds');
+var articleImageSrcs = require('./imageSrcs');
 var AWS = require('aws-sdk');
 var https = require('https');
 var s3 = new AWS.S3();
 var Upload = require('s3-uploader');
 var articlesWithSubpages = require('./articlesWithSubpages');
- 
-var s3Link = "https://rsz.io/s3.amazonaws.com/austinmatthuw/"
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -438,19 +437,10 @@ function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, secti
     }
     console.log("test14");
     if(sectionsWithContent[sectionCurrent].image != null){
-        if(sectionsWithContent[sectionCurrent].image.indexOf(".png") > -1){
-            
-            
-        } else if(sectionsWithContent[sectionCurrent].image.indexOf(".jpg") > -1){
+        if(sectionsWithContent[sectionCurrent].image.indexOf(".png") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpeg") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpg") > -1){
             var imageObj = {
-                smallImageUrl: sectionsWithContent[sectionCurrent].image.substring(0, sectionsWithContent[sectionCurrent].image.indexOf(".jpg")+4)+"?height=480?width=720",
-                largeImageUrl: sectionsWithContent[sectionCurrent].image.substring(0, sectionsWithContent[sectionCurrent].image.indexOf(".jpg")+4)+"?height=800?width=1200"
-            };
-            contextThis.emit(':askWithCard', contextThis.attributes['speechOutput'] + contextThis.t("INFO_CONTINUE"), contextThis.attributes['repromptSpeech'], cardTitle, fullContent,imageObj);
-        } else if(sectionsWithContent[sectionCurrent].image.indexOf(".jpeg") > -1){
-            var imageObj = {
-                smallImageUrl: sectionsWithContent[sectionCurrent].image.substring(0, sectionsWithContent[sectionCurrent].image.indexOf(".jpeg")+5)+"?height=480?width=720",
-                largeImageUrl: sectionsWithContent[sectionCurrent].image.substring(0, sectionsWithContent[sectionCurrent].image.indexOf(".jpeg")+5)+"?height=800?width=1200"
+                smallImageUrl: articleImageSrcs[sectionsWithContent[sectionCurrent].image],
+                largeImageUrl: articleImageSrcs[sectionsWithContent[sectionCurrent].image]
             };
             contextThis.emit(':askWithCard', contextThis.attributes['speechOutput'] + contextThis.t("INFO_CONTINUE"), contextThis.attributes['repromptSpeech'], cardTitle, fullContent,imageObj);
         } else {
