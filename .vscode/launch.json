@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             //"program": "${workspaceRoot}/test/main.js",
-            "program": "${workspaceRoot}/helperFiles/test2.js",
+            "program": "${workspaceRoot}/test/main.js",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",

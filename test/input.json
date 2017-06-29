@@ -1,20 +1,82 @@
 {
   "session": {
-    "sessionId": "SessionId.3a9e9285-3d7f-4bd2-a724-a9f5da244c2c",
+    "sessionId": "SessionId.23c7fff9-220c-4e58-b6a7-b9d3bee16955",
     "application": {
-      "applicationId": "amzn1.ask.skill.46b0d480-d1b8-4a92-aa7e-96402bc35ff8"
+      "applicationId": "amzn1.ask.skill.dcdaa6da-5756-405c-aede-6360e975104e"
     },
-    "attributes": {},
+    "attributes": {
+      "articleSectionCurrent": "2",
+      "cardNameMain": "Sol/Earth",
+      "articleSectionsWithContent": [
+        {
+          "section": "0",
+          "title": "Overview",
+          "image": "https://vignette1.wikia.nocookie.net/elite-dangerous/images/5/58/Earth-3302-Elite-Dangerous.png/revision/latest/scale-to-width-down/200?cb=20170205115048"
+        },
+        {
+          "section": "2",
+          "title": "Formation",
+          "image": "https://vignette2.wikia.nocookie.net/elite-dangerous/images/e/ec/Earth-DSCOVR-20150706-IFV.jpg/revision/latest/scale-to-width-down/181?cb=20150812141002"
+        },
+        {
+          "section": "3",
+          "title": "Rise of the Humans"
+        },
+        {
+          "section": "4",
+          "title": "The 20th Century"
+        },
+        {
+          "section": "5",
+          "title": "The Space Age"
+        },
+        {
+          "section": "6",
+          "title": "Lore",
+          "image": "https://vignette3.wikia.nocookie.net/elite-dangerous/images/d/d0/Earth_Tourist_Spot_0165_beacon.png/revision/latest/scale-to-width-down/200?cb=20170304233559"
+        },
+        {
+          "section": "7",
+          "title": "Expansion into Space",
+          "image": "https://vignette3.wikia.nocookie.net/elite-dangerous/images/5/53/North-America-Elite-Dangerous.jpg/revision/latest/scale-to-width-down/200?cb=20170425183738"
+        },
+        {
+          "section": "8",
+          "title": "Geography",
+          "image": "https://vignette3.wikia.nocookie.net/elite-dangerous/images/2/2e/Australia-Elite-Dangerous.jpg/revision/latest/scale-to-width-down/200?cb=20170425183801"
+        },
+        {
+          "section": "9",
+          "title": "Atmosphere"
+        },
+        {
+          "section": "10",
+          "title": "Starports"
+        },
+        {
+          "section": "11",
+          "title": "Getting There"
+        },
+        {
+          "section": "12",
+          "title": "References"
+        }
+      ],
+      "speechOutput": "The article, mars, does not contain the section, formation. What else can I help with?",
+      "articleId": 7752,
+      "repromptSpeech": "What else can I help with?",
+      "cardNameSection": "Formation"
+    },
     "user": {
-      "userId": "amzn1.ask.account.AEKTREVVJOP5IO4DZXMKCFWWS4DECGRQQJRL6CRUOVDNZL7ERS4RVBMI2NB4JU4AGHWQVFOZGJWL4SCY5W522AUYUL55LPDW67TGZ65XMGWVZJD4SYV34TJBCTEDWPTMVUSRENRZKUFUT4YZP2C7KU2OAINFYQJYU2COENX6MASABQGJ2RHPOVSIGN7M22V6NVSX4TLY7645YFY"
+      "userId": "amzn1.ask.account.AGRDKO5EIKIJHARBFU3B52KB7IGIXUS6RGSUANK3LMVFLEVMZGFANCLQH4LCZNFVG2SOE7TSCKIPSR6DIYUQEO5UNS4ZB54YAEM7PXBI7X7ATLI2GCRNCTH4YTGQRACZMBP2GLTJMJSDM5NGFLUENOZILTGAW7ABANRLFE4BLFJDCORTMPINFVOQ3ORFWX7OTGAUYYCNS4SNY2A"
     },
-    "new": true
+    "new": false
   },
   "request": {
     "type": "IntentRequest",
-    "requestId": "EdwRequestId.48bd56f2-de0c-473f-aded-da596e057b6e",
+    "requestId": "EdwRequestId.03fda295-4eb4-4cb5-aa47-c5443226eb69",
     "locale": "en-US",
-    "timestamp": "2017-06-26T22:27:17Z",
+    "timestamp": "2017-06-29T15:53:36Z",
     "intent": {
       "name": "GetInfoIntent",
       "slots": {
@@ -22,15 +84,15 @@
           "name": "ArticleWithSubpage"
         },
         "Article": {
-          "name": "Article"
+          "name": "Article",
+          "value": "earth"
         },
         "Subpage": {
-          "name": "Subpage",
-          "value": "earth"
+          "name": "Subpage"
         },
         "Section": {
           "name": "Section",
-          "value": "formation"
+          "value": "history"
         }
       }
     }
