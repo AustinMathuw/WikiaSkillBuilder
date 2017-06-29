@@ -394,7 +394,7 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
                     }
                     if(article.sections[section].title.toLowerCase() == sectionName) {
                         sectionCurrentContent.push(article.sections[section].content[content]);
-                        currentSection = section-1;
+                        currentSection = section;
                     }
                 }
             }
@@ -403,7 +403,7 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
                 contextThis.attributes['articleSectionsWithContent'] = sectionsWithContent;
                 contextThis.attributes['cardNameMain'] = article.sections[0].title;
                 contextThis.attributes['cardNameSection'] = article.sections[currentSection].title;
-                contextThis.attributes['articleSectionCurrent'] = 0;
+                contextThis.attributes['articleSectionCurrent'] = currentSection;
                 speechBuilder(contextThis,currentSection,sectionCurrentContent,sectionsWithContent,false);
             } else {
                 var speechOutput = contextThis.t("INFO_NOT_FOUND_MESSAGE");
@@ -469,7 +469,7 @@ function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, secti
     if(sectionsWithContent[sectionCurrent].image != null){
         if(sectionsWithContent[sectionCurrent].image.indexOf(".png") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpeg") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpg") > -1){
             var imageObj = {
-                smallImageUrl: articleImageSrcs[sectionsWithContent[sectionCurrent].image],
+                smallImageUrl: articleImageSrcs[sectionsWithContent[sectionCurrent].image].replace,
                 largeImageUrl: articleImageSrcs[sectionsWithContent[sectionCurrent].image]
             };
             contextThis.emit(':askWithCard', contextThis.attributes['speechOutput'] + contextThis.t("INFO_CONTINUE"), contextThis.attributes['repromptSpeech'], cardTitle, fullContent,imageObj);
