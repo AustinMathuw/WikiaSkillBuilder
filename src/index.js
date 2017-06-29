@@ -6,10 +6,6 @@ var wiki = new Wikia("elite-dangerous"); //Define wikia site (subdomain)
 var APP_ID = undefined; // TODO replace with your app ID (OPTIONAL).
 var articleIds = require('./articleIds');
 var articleImageSrcs = require('./imageSrcs');
-var AWS = require('aws-sdk');
-var https = require('https');
-var s3 = new AWS.S3();
-var Upload = require('s3-uploader');
 var articlesWithSubpages = require('./articlesWithSubpages');
 
 exports.handler = function(event, context, callback) {
@@ -24,67 +20,62 @@ exports.handler = function(event, context, callback) {
 
 var handlers = {
     'LaunchRequest': function () {
+        console.log("Launch");
         this.attributes['speechOutput'] = this.t("WELCOME_MESSAGE", this.t("SKILL_NAME"));
         this.attributes['repromptSpeech'] = this.t("WELCOME_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
     },
     'UnrecognizedIntent': function () {
+        console.log("Unrecognized");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
         this.attributes['repromptSpeech'] = this.t("HELP_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
     },
     'MoreInfoIntent': function () { //More information on topic
-        console.log("more info");
+        console.log("More Info");
         var articleId = this.attributes['articleId'];
-        //try{
-            if(typeof articleId != 'undefined'){
-                this.attributes['articleSectionCurrent'] = this.attributes['articleSectionCurrent'] + 1;
-                console.log(this.attributes['articleSectionCurrent']);
-                console.log(articleId);
 
-                var sectionCurrent = this.attributes['articleSectionCurrent'];
-                var articleSectionsWithContent = this.attributes['articleSectionsWithContent'];
+        if(typeof articleId != 'undefined'){
+            this.attributes['articleSectionCurrent'] = this.attributes['articleSectionCurrent'] + 1;
 
-                var sectionCurrentContent = [];
+            var sectionCurrent = this.attributes['articleSectionCurrent'];
+            var articleSectionsWithContent = this.attributes['articleSectionsWithContent'];
 
-                var contextThis = this;
+            var sectionCurrentContent = [];
 
-                if(typeof articleSectionsWithContent[sectionCurrent] != 'undefined'){
-                    this.attributes['cardNameSection'] = articleSectionsWithContent[sectionCurrent].title;
-                    wiki.getArticleAsSimpleJson(articleId)
-                        .then(function(data) {
-                            var article = data;
-                            var sectionInfo = article.sections[articleSectionsWithContent[sectionCurrent].section];
-                            for(var content in sectionInfo.content){
-                                var titleWorking = sectionInfo.title;
-                                sectionCurrentContent.push(sectionInfo.content[content]);
-                            }
-                            speechBuilder(contextThis,sectionCurrent,sectionCurrentContent,articleSectionsWithContent,false);
-                        })
-                        .fail(function(err) {
-                            console.log(err);
-                            var speechOutput = contextThis.t("I'm having trouble connecting. Please try again later...");
-                            contextThis.emit(':tell', speechOutput);
+            var contextThis = this;
+
+            if(typeof articleSectionsWithContent[sectionCurrent] != 'undefined'){
+                this.attributes['cardNameSection'] = articleSectionsWithContent[sectionCurrent].title;
+                wiki.getArticleAsSimpleJson(articleId)
+                    .then(function(data) {
+                        var article = data;
+                        var sectionInfo = article.sections[articleSectionsWithContent[sectionCurrent].section];
+                        for(var content in sectionInfo.content){
+                            var titleWorking = sectionInfo.title;
+                            sectionCurrentContent.push(sectionInfo.content[content]);
                         }
-                    );
-                } else {
-                    this.attributes['speechOutput'] = this.t("INFO_END", this.attributes['cardNameMain']);
-                    this.attributes['repromptSpeech'] = this.t("INFO_CONTINUE_END");
-                    this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
-                }
+                        speechBuilder(contextThis,sectionCurrent,sectionCurrentContent,articleSectionsWithContent,false);
+                    })
+                    .fail(function(err) {
+                        console.log("Error: " + err);
+                        var speechOutput = contextThis.t("I'm having trouble connecting. Please try again later...");
+                        contextThis.emit(':tell', speechOutput);
+                    }
+                );
             } else {
-                this.attributes['speechOutput'] = "First, you will need to give me an article to look up. You can do so now.";
+                this.attributes['speechOutput'] = this.t("INFO_END", this.attributes['cardNameMain']);
                 this.attributes['repromptSpeech'] = this.t("INFO_CONTINUE_END");
                 this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
             }
-            
-        /*} catch(e) {
-            this.attributes['speechOutput'] = this.t("INFO_END", this.attributes['cardName']);
+        } else {
+            this.attributes['speechOutput'] = "First, you will need to give me an article to look up. You can do so now.";
             this.attributes['repromptSpeech'] = this.t("INFO_CONTINUE_END");
             this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
-        }*/
+        }
     },
     'GetInfoIntent': function () { //Get info on topic
+        console.log("Get Info");
         var articleSlot = this.event.request.intent.slots.Article;
         var articleWithSubpageSlot = this.event.request.intent.slots.ArticleWithSubpage;
         var subpageSlot = this.event.request.intent.slots.Subpage;
@@ -134,21 +125,21 @@ var handlers = {
         console.log(sectionDefined);
 
         if(articleDefined || articleWithSubpageDefined) {
-            console.log("test7");
+            console.log("Article and/or Article With Subpage Defined");
             var articles = articleIds;
             var articlesWithSubpage = this.t("ARTICLES_WITH_SUBPAGES");
 
 
             //Main Artice and Subpage FIX FROM LOGS
             if(articleWithSubpageDefined && subpageDefined && !sectionDefined && !articleDefined && typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id != 'undefined' && !articleDefined && !sectionDefined) {
-                console.log("test1");
+                console.log("Main Artice and Subpage");
                 var article;
                 var contextThis = this;
                 try{
                     var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
                     articleWithoutStartSection(article,contextThis,id);
                 } catch (e) {
-                    console.log(e);
+                    console.log("Error: " + e);
                     var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                     var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
                     speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -157,17 +148,16 @@ var handlers = {
                     this.attributes['repromptSpeech'] = repromptSpeech;
                     this.emit(':ask', speechOutput, repromptSpeech);
                 }
-                
             //Main Artice, subpage, and section
             } else if(articleWithSubpageDefined && subpageDefined && sectionDefined && !articleDefined && typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName] != 'undefined' && articlesWithSubpage[articleWithSubpageName].subpages[subpageName].sections.indexOf(sectionName) > -1) {
-                console.log("test8");
+                console.log("Main Artice, subpage, and section");
                 var article;
                 var contextThis = this;
                 try{
                     var id = articlesWithSubpage[articleWithSubpageName].subpages[subpageName].id;
                     articleWithStartSection(article,contextThis,id,sectionName);
                 } catch (e) {
-                    console.log(e);
+                    console.log("Error: " + e);
                     var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                     var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
                     speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -179,14 +169,14 @@ var handlers = {
                 
             //Main article and section
             } else if(!articleWithSubpageDefined && !subpageDefined && sectionDefined && articleDefined && typeof articles[articleName] != 'undefined' && articles[articleName].sections.indexOf(sectionName) > -1) {
-                console.log("test9");
+                console.log("Main article and section");
                 var article;
                 var contextThis = this;
                 try{
                     var id = articles[articleName].id;
                     articleWithStartSection(article,contextThis,id,sectionName);
                 } catch (e) {
-                    console.log(e);
+                    console.log("Error: " + e);
                     var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                     var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
                     speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -198,14 +188,14 @@ var handlers = {
                 
             //Main article only
             } else if(!articleWithSubpageDefined && !subpageDefined && !sectionDefined && articleDefined && typeof articles[articleName] != 'undefined') {
-                console.log("test10");
+                console.log("Main article only");
                 var article;
                 var contextThis = this;
                 try{
                     var id = articles[articleName].id;
                     articleWithoutStartSection(article,contextThis,id);
                 } catch (e) {
-                    console.log(e);
+                    console.log("Error: " + e);
                     var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                     var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
                     speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -214,8 +204,8 @@ var handlers = {
                     this.attributes['repromptSpeech'] = repromptSpeech;
                     this.emit(':ask', speechOutput, repromptSpeech);
                 }
-                
             } else {
+                console.log("Redundant Check -Something is really wrong if I showed up");
                 var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
                 var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
                 speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -225,6 +215,7 @@ var handlers = {
                 this.emit(':ask', speechOutput, repromptSpeech);
             }
         } else {
+            console.log("Article and/or Article With Subpage NOT Defined");
             var speechOutput = this.t("INFO_NOT_FOUND_MESSAGE");
             var repromptSpeech = this.t("INFO_NOT_FOUND_REPROMPT");
             speechOutput += this.t("INFO_NOT_FOUND_WITHOUT_ITEM_NAME");
@@ -235,23 +226,29 @@ var handlers = {
         }
     },
     'AMAZON.HelpIntent': function () {
+        console.log("Help");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
         this.attributes['repromptSpeech'] = this.t("HELP_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
     'AMAZON.RepeatIntent': function () {
+        console.log("Repeat");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
     'AMAZON.StopIntent': function () {
+        console.log("Stop");
         this.emit('SessionEndedRequest');
     },
     'AMAZON.CancelIntent': function () {
+        console.log("Cancel");
         this.emit('SessionEndedRequest');
     },
     'SessionEndedRequest':function () {
+        console.log("Session Ended");
         this.emit(':tell', this.t("STOP_MESSAGE"));
     },
     'Unhandled': function () {
+        console.log("Unhandled function");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
         this.attributes['repromptSpeech'] = this.t("HELP_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
@@ -298,7 +295,6 @@ var languageStrings = {
 function articleWithoutStartSection (article, contextThis, id) {
     wiki.getArticleAsSimpleJson(id)
         .then(function(data) {
-            console.log(data);
             article = data;
 
             var sectionsWithContent = [];
@@ -328,20 +324,15 @@ function articleWithoutStartSection (article, contextThis, id) {
                     if(sectionNum == 0) {
                         sectionCurrentContent.push(article.sections[section].content[content]);
                     }
-                    
-                    console.log("test22");
                 }
             }
-            console.log("test3");
             if (typeof sectionCurrentContent[0] != "undefined") {
-                console.log("test11");
                 contextThis.attributes['articleId'] = id;
                 contextThis.attributes['articleSectionsWithContent'] = sectionsWithContent;
                 contextThis.attributes['cardNameMain'] = article.sections[0].title;
                 contextThis.attributes['articleSectionCurrent'] = 0;
                 speechBuilder(contextThis,0,sectionCurrentContent,sectionsWithContent,true);
             } else {
-                console.log("test12");
                 var speechOutput = contextThis.t("INFO_NOT_FOUND_MESSAGE");
                 var repromptSpeech = contextThis.t("INFO_NOT_FOUND_REPROMPT");
                 if (articleName) {
@@ -356,7 +347,7 @@ function articleWithoutStartSection (article, contextThis, id) {
             }
         })
         .fail(function(err) {
-            console.log(err);
+            console.log("Error: " + err);
             var speechOutput = contextThis.t("INFO_NOT_FOUND_MESSAGE");
             var repromptSpeech = contextThis.t("INFO_NOT_FOUND_REPROMPT");
             if (articleName) {
@@ -375,7 +366,6 @@ function articleWithoutStartSection (article, contextThis, id) {
 function articleWithStartSection (article, contextThis, id, sectionName) {
     wiki.getArticleAsSimpleJson(id)
         .then(function(data) {
-            console.log(data);
             article = data;
             var sectionsWithContent = [];
             var sectionTitles = [];
@@ -406,12 +396,9 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
                         sectionCurrentContent.push(article.sections[section].content[content]);
                         currentSection = section-1;
                     }
-                    console.log("test22");
                 }
             }
-            console.log("test3");
             if (typeof sectionCurrentContent[0] != "undefined") {
-                console.log("test11");
                 contextThis.attributes['articleId'] = id;
                 contextThis.attributes['articleSectionsWithContent'] = sectionsWithContent;
                 contextThis.attributes['cardNameMain'] = article.sections[0].title;
@@ -419,7 +406,6 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
                 contextThis.attributes['articleSectionCurrent'] = 0;
                 speechBuilder(contextThis,currentSection,sectionCurrentContent,sectionsWithContent,false);
             } else {
-                console.log("test12");
                 var speechOutput = contextThis.t("INFO_NOT_FOUND_MESSAGE");
                 var repromptSpeech = contextThis.t("INFO_NOT_FOUND_REPROMPT");
                 if (articleName) {
@@ -434,7 +420,6 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
             }
         })
         .fail(function(err) {
-            console.log(err);
             var speechOutput = contextThis.t("INFO_NOT_FOUND_MESSAGE");
             var repromptSpeech = contextThis.t("INFO_NOT_FOUND_REPROMPT");
             if (articleName) {
@@ -451,7 +436,6 @@ function articleWithStartSection (article, contextThis, id, sectionName) {
 }
 
 function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, sectionsWithContent, isStart){
-    console.log("test13");
     contextThis.attributes['repromptSpeech'] = contextThis.t("INFO_REPEAT_MESSAGE");
     var fullContent = "";
     contextThis.attributes['speechOutput'] = sectionsWithContent[sectionCurrent].title + ". ";
@@ -468,7 +452,6 @@ function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, secti
             fullContent += sectionCurrentContent[contentNum].text + " \n ------------ \n ";
         } else if (sectionCurrentContent[contentNum].type == "list") {
             if(sectionCurrentContent[contentNum].elements.length > 0) {
-                console.log('here');
                 var workingSpeech = "";
                 var workingContent = "";
                 for(var listItem in sectionCurrentContent[contentNum].elements){
@@ -483,7 +466,6 @@ function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, secti
             }
         }
     }
-    console.log("test14");
     if(sectionsWithContent[sectionCurrent].image != null){
         if(sectionsWithContent[sectionCurrent].image.indexOf(".png") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpeg") > -1 || sectionsWithContent[sectionCurrent].image.indexOf(".jpg") > -1){
             var imageObj = {
