@@ -1,0 +1,49 @@
+{
+  "intents": [
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "ArticleWithSubpage",
+          "type": "LIST_OF_ARTICLES_WITH_SUBPAGES"
+        },
+        {
+          "name": "Article",
+          "type": "LIST_OF_ARTICLES"
+        },
+        {
+          "name": "Section",
+          "type": "LIST_OF_SECTIONS"
+        },
+        {
+          "name": "Subpage",
+          "type": "LIST_OF_SUBPAGES"
+        }
+      ],
+      "intent": "GetInfoIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "More",
+          "type": "MORE_INFO"
+        }
+      ],
+      "intent": "MoreInfoIntent"
+    },
+    {
+      "intent": "UnrecognizedIntent"
+    }
+  ]
+}
