@@ -2,7 +2,7 @@
 
 var Alexa = require('alexa-sdk');
 var Wikia = require('node-wikia');
-var wiki = new Wikia("elite-dangerous"); //Define wikia site (subdomain)
+var wiki = new Wikia(""); //Define wikia site (subdomain)
 var APP_ID = undefined; // TODO replace with your app ID (OPTIONAL).
 var articleIds = require('./articleIds');
 var articleImageSrcs = require('./imageSrcs');
@@ -17,7 +17,6 @@ exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.APP_ID = APP_ID;
     // To enable string internationalization (i18n) features, set a resources object.
-    //alexa.dynamoDBTableName = "wikiUsersED";
     alexa.resources = languageStrings;
     alexa.registerHandlers(handlers);
     alexa.execute();
@@ -135,9 +134,9 @@ var handlers = {
             var articlesWithSubpage = this.t("ARTICLES_WITH_SUBPAGES");
 
 
-            //Main Artice and Subpage FIX FROM LOGS
+            //Main Article and Subpage FIX FROM LOGS
             if(articleWithSubpageDefined && subpageDefined && !sectionDefined && !articleDefined) {
-                console.log("Main Artice and Subpage");
+                console.log("Main Article and Subpage");
                 if(typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName] != 'undefined'){
                     var article;
                     var contextThis = this;
@@ -182,9 +181,9 @@ var handlers = {
                         this.emit(':ask', speechOutput, repromptSpeech);
                     }
                 }
-            //Main Artice, subpage, and section
+            //Main Article, subpage, and section
             } else if(articleWithSubpageDefined && subpageDefined && sectionDefined && !articleDefined) {
-                console.log("Main Artice, subpage, and section");
+                console.log("Main Article, subpage, and section");
                 if(typeof articlesWithSubpage[articleWithSubpageName] != 'undefined' && typeof articlesWithSubpage[articleWithSubpageName].subpages[subpageName] != 'undefined' && articlesWithSubpage[articleWithSubpageName].subpages[subpageName].sections.indexOf(sectionName) > -1){
                     var article;
                     var contextThis = this;

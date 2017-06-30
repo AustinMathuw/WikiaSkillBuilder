@@ -17,9 +17,10 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var colors = require('colors');
 
+var wikiaSubdomain = "elite-dangerous";
+
 //var wiki = new Wikia("<your wiki subdomain>")'
-//var wiki = new Wikia("halo");
-var wiki = new Wikia("elite-dangerous");
+var wiki = new Wikia(wikiaSubdomain);
 
 //Global Variables
 var useWikiImages = true; //Set to true to upload images to S3
@@ -121,7 +122,7 @@ function createMasterArticleIdList() {
         allArticles = {};
         redirectArticles = [];
         var green = '\u001b[42m \u001b[0m'; //Set Progress Bar color to green
-        var bar = new ProgressBar('  Removing REDIRECT Articles [:bar] :percent      :current/:total     Elapsed: :elapseds Remaining: :etas', {
+        var bar = new ProgressBar('  Assosiating REDIRECT Articles [:bar] :percent      :current/:total     Elapsed: :elapseds Remaining: :etas', {
             complete: green,
             incomplete: ' ',
             width: 20,
@@ -302,7 +303,7 @@ function createMasterArticleIdList() {
 
     //Wait for "articleRedirectVent" to finish
     articleRedirectVent().then(function(){
-        console.log('\nREDIRECT vent complete\n'.blue);
+        console.log('\nREDIRECT assosiation complete\n'.blue);
         //Wait for "articleNoContentVent" to finish
         articleNoContentVent().then(function(){
             console.log('\nNO CONTENT vent complete\n'.blue);
@@ -481,7 +482,7 @@ function indivPic(url) {
     }
 
     if(compareString != ""){
-        var s3url = url.substring(url.indexOf("images"),url.indexOf(compareString)+compareString.length);
+        var s3url = url.substring(url.indexOf('/', 8)+1,url.indexOf(compareString)+compareString.length);
         var paramsGet = {
             Bucket: bucket,
             Key: s3url
@@ -489,7 +490,7 @@ function indivPic(url) {
 
         var headObjectPromise = s3.headObject(paramsGet).promise();
         headObjectPromise.then(function(data) {
-            imageUrlArray[url] = "https://s3.amazonaws.com/"+bucket+"/" + s3url;
+            imageUrlArray[url] = "https://s3.amazonaws.com/" + bucket + "/" + s3url;
             test++;
             imageUploadBar.tick();
             if(test == rawUrlArray.length){
@@ -514,7 +515,7 @@ function indivPic(url) {
                         }
                         var putObjectPromise = s3.putObject(paramsPut).promise();
                         putObjectPromise.then(function(data) {
-                                imageUrlArray[url] = "https://s3.amazonaws.com/"+bucket+"/" + s3url;
+                                imageUrlArray[url] = "https://s3.amazonaws.com/" + bucket + "/" + s3url;
                                 test++;
                                 imageUploadBar.tick();
                                 if(test == rawUrlArray.length){
@@ -522,11 +523,11 @@ function indivPic(url) {
                                     mergeMasterWithSubpages();
                                 }
                         }).catch(function(err) {
-                            throw err;
+                            console.log(err);
                         });
                     });
                     res.on('error', function (e) {
-                        throw e;
+                        console.log(e);
                     });
                 });
             }

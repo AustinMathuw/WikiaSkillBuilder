@@ -1,0 +1,33 @@
+{
+  "name": "alexa-wiki-skill-dependency-creator",
+  "version": "1.0.0",
+  "description": "Creates dependencies to use in Alexa wiki skills",
+  "main": "alexaWikiSkillDependencyCreator.js",
+  "dependencies": {
+    "asyncawait": "^1.0.6",
+    "aws-sdk": "^2.78.0",
+    "cli-spinner": "^0.2.6",
+    "colors": "^1.1.2",
+    "node-wikia": "^0.0.3",
+    "progress": "^2.0.0",
+    "s3-uploader": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AustinMathuw/WikiaSkillBuilder.git"
+  },
+  "keywords": [
+    "alexa",
+    "wiki"
+  ],
+  "author": "Austin Wilson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AustinMathuw/WikiaSkillBuilder/issues"
+  },
+  "homepage": "https://github.com/AustinMathuw/WikiaSkillBuilder#readme"
+}
