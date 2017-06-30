@@ -23,18 +23,21 @@ exports.handler = function(event, context, callback) {
 };
 
 var handlers = {
+    //Handles Launch
     'LaunchRequest': function () {
         console.log("Launch");
         this.attributes['speechOutput'] = this.t("WELCOME_MESSAGE", this.t("SKILL_NAME"));
         this.attributes['repromptSpeech'] = this.t("WELCOME_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
     },
+    //Handles Unrecognized
     'UnrecognizedIntent': function () {
         console.log("Unrecognized");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
         this.attributes['repromptSpeech'] = this.t("HELP_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
     },
+    //Handles More Info
     'MoreInfoIntent': function () { //More information on topic
         console.log("More Info");
         var articleId = this.attributes['articleId'];
@@ -78,6 +81,7 @@ var handlers = {
             this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
         }
     },
+    //Handles Info request
     'GetInfoIntent': function () { //Get info on topic
         console.log("Get Info");
         var articleSlot = this.event.request.intent.slots.Article;
@@ -349,28 +353,34 @@ var handlers = {
             this.emit(':ask', speechOutput, repromptSpeech);
         }
     },
+    //Handles Help
     'AMAZON.HelpIntent': function () {
         console.log("Help");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
         this.attributes['repromptSpeech'] = this.t("HELP_REPROMPT");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
+    //Handles Repeat
     'AMAZON.RepeatIntent': function () {
         console.log("Repeat");
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
+    //Handles Stop
     'AMAZON.StopIntent': function () {
         console.log("Stop");
         this.emit('SessionEndedRequest');
     },
+    //Handles Cancel
     'AMAZON.CancelIntent': function () {
         console.log("Cancel");
         this.emit('SessionEndedRequest');
     },
+    //Handles Endeded
     'SessionEndedRequest':function () {
         console.log("Session Ended");
         this.emit(':tell', this.t("STOP_MESSAGE"));
     },
+    //Handles Unhandled
     'Unhandled': function () {
         console.log("Unhandled function");
         this.attributes['speechOutput'] = this.t("HELP_MESSAGE");
@@ -385,12 +395,12 @@ var languageStrings = {
         "translation": {
             "ARTICLES": articleIds,
             "ARTICLES_WITH_SUBPAGES": articlesWithSubpages,
-            "SKILL_NAME": "Unofficial Elite Dangerous Wiki",
-            "WELCOME_MESSAGE": "Welcome to %s. You can ask a question like, what\'s an asp explorer? ... Now, what can I help you with.",
+            "SKILL_NAME": "<SKILL NAME HERE>",
+            "WELCOME_MESSAGE": "Welcome to %s. You can ask a question like, what\'s an <EXAMPLE ARTICLE>? ... Now, what can I help you with.",
             "WELCOME_REPROMPT": "For instructions on what you can say, please say help me.",
             "DISPLAY_CARD_TITLE": "%s",
-            "HELP_MESSAGE": "You can ask questions such as, what is a pulse laser, or, you can say exit...Now, what can I help you with?",
-            "HELP_REPROMPT": "You can say things like, what is a pulse laser, or you can say exit...Now, what can I help you with?",
+            "HELP_MESSAGE": "You can ask questions such as, what is a <EXAMPLE ARTICLE>, or, you can say exit...Now, what can I help you with?",
+            "HELP_REPROMPT": "You can say things like, what is a <EXAMPLE ARTICLE>, or you can say exit...Now, what can I help you with?",
             "STOP_MESSAGE": "Goodbye!",
             "INFO_END": "I do not have any more information for %s. You can ask about something else, or say quit to exit.",
             "INFO_CONTINUE": " To hear more, say continue.",
@@ -404,18 +414,19 @@ var languageStrings = {
     },
     "en-US": {
         "translation": {
-            "ARTICLES" : articleIds,
-            "SKILL_NAME" : "Unofficial Elite: Dangerous Wiki: US Version"
+            "ARTICLES": articleIds,
+            "SKILL_NAME": "<SKILL NAME HERE>: US Version"
         }
     },
     "en-GB": {
         "translation": {
             "ARTICLES": articleIds,
-            "SKILL_NAME": "Unofficial Elite: Dangerous Wiki: UK Version"
+            "SKILL_NAME": "<SKILL NAME HERE>: UK Version"
         }
     }
 };
 
+//Wikia API calls for article without defined section to start at
 function articleWithoutStartSection (article, contextThis, id) {
     wiki.getArticleAsSimpleJson(id)
         .then(function(data) {
@@ -482,6 +493,7 @@ function articleWithoutStartSection (article, contextThis, id) {
     );
 }
 
+//Wikia API calls for article and defined section to start at
 function articleWithStartSection (article, contextThis, id) {
     wiki.getArticleAsSimpleJson(id)
         .then(function(data) {
@@ -550,6 +562,7 @@ function articleWithStartSection (article, contextThis, id) {
     );
 }
 
+//Builds response to send to User
 function speechBuilder(contextThis, sectionCurrent, sectionCurrentContent, sectionsWithContent, isStart){
     contextThis.attributes['repromptSpeech'] = contextThis.t("INFO_REPEAT_MESSAGE");
     var fullContent = "";

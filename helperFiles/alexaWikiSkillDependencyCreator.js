@@ -17,14 +17,14 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var colors = require('colors');
 
-var wikiaSubdomain = "elite-dangerous";
+var wikiaSubdomain = "";
 
 //var wiki = new Wikia("<your wiki subdomain>")'
 var wiki = new Wikia(wikiaSubdomain);
 
 //Global Variables
 var useWikiImages = true; //Set to true to upload images to S3
-var bucket = "austinmatthuw"; //Set bucket to store images from Wikia
+var bucket = ""; //Set bucket to store images from Wikia
 
 var contentData;
 var allArticleTitles = [];
