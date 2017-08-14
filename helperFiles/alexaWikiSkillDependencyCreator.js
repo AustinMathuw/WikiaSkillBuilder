@@ -122,7 +122,7 @@ function createMasterArticleIdList() {
         allArticles = {};
         redirectArticles = [];
         var green = '\u001b[42m \u001b[0m'; //Set Progress Bar color to green
-        var bar = new ProgressBar('  Assosiating REDIRECT Articles [:bar] :percent      :current/:total     Elapsed: :elapseds Remaining: :etas', {
+        var bar = new ProgressBar('  Associating REDIRECT Articles [:bar] :percent      :current/:total     Elapsed: :elapseds Remaining: :etas', {
             complete: green,
             incomplete: ' ',
             width: 20,
